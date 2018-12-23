@@ -1,0 +1,16 @@
+[
+{
+  "modid": "technological_singularity",
+  "name": "Technological Singularity",
+  "description": "Arcade aerospace simulator",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Foghrye4"],
+  "credits": "Nobody",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

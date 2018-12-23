@@ -1,0 +1,30 @@
+{
+    "required": true,
+    "package": "technological_singularity.asm.mixin",
+    "refmap": "technological_singularity.mixins.refmap.json",
+    "plugin": "technological_singularity.asm.TSMixinConfig",
+    "compatibilityLevel": "JAVA_8",
+    "minVersion": "0.6.15-SNAPSHOT",
+    "mixins": [
+        "common.MixinEntityPlayer",
+        "common.MixinEntityLivingBase"
+    ],
+    "client": [
+        "client.MixinEntity",
+        "client.MixinEntityPlayerSP",
+        "client.MixinWorld",
+        "client.MixinMinecraft",
+        "client.MixinRenderGlobal",
+        "client.MixinRenderChunk",
+        "client.MixinChunkRenderContainer",
+        "client.MixinViewFrustum"
+    ],
+    "server": [
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    },
+    "overwrites": {
+        "conformVisibility": true
+    }
+}

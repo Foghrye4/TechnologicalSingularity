@@ -1,0 +1,13 @@
+generator.ts.worldType=TechSingularity
+itemGroup.technological_singularity=Technological Singularity
+
+ts.launch=Launch
+ts.thruster_N=Thruster #%d
+
+key.technological_singularity.roll_cw=Roll CW
+key.technological_singularity.roll_ccw=Roll CCW
+
+technological_singularity.altitude=Altitude: %+4.1f m/ %+4.1f m/s
+technological_singularity.earthLongitude=Earth longitude: %+4.4f°/ %+4.4f °/s
+technological_singularity.ringLongitude=Ring longitude: %+4.4f°/ %+4.4f °/s
+technological_singularity.latitude=Latitude: %+4.4f°/ %+4.4f °/s

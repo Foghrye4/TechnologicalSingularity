@@ -1,0 +1,13 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+ 		"model" : "cube_all"
+ 	},
+    "variants": {
+    	"variant": {
+	        "hull": { "textures": { "all": "technological_singularity:block/space_station_hull" }},
+        	"hull_striped": { "textures": { "all": "technological_singularity:block/yellow_black_stripes" }},
+	        "gate": { "model": "technological_singularity:space_station_gate" }
+	    }
+    }
+}

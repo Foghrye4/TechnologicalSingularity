@@ -1,0 +1,17 @@
+{
+	"forge_marker": 1,
+    "variants": {
+        "slope_normal=px_py": { "model": "technological_singularity:earth_slope_px_py.obj" },
+        "slope_normal=px_ny": { "model": "technological_singularity:earth_slope_px_py.obj", "x":180 },
+        "slope_normal=nx_py": { "model": "technological_singularity:earth_slope_px_py.obj", "y":180 },
+        "slope_normal=nx_ny": { "model": "technological_singularity:earth_slope_px_py.obj", "x":180, "y":180  },
+        "slope_normal=px_pz": { "model": "technological_singularity:earth_slope_px_py.obj", "x":270 },
+        "slope_normal=px_nz": { "model": "technological_singularity:earth_slope_px_py.obj", "x":90 },
+        "slope_normal=nx_pz": { "model": "technological_singularity:earth_slope_px_py.obj", "x":90, "y":180 },
+        "slope_normal=nx_nz": { "model": "technological_singularity:earth_slope_px_py.obj", "x":270, "y":180 },
+        "slope_normal=py_pz": { "model": "technological_singularity:earth_slope_px_py.obj", "y":90},
+        "slope_normal=py_nz": { "model": "technological_singularity:earth_slope_px_py.obj", "y":270},
+        "slope_normal=ny_pz": { "model": "technological_singularity:earth_slope_px_py.obj", "y":90, "x":180 },
+        "slope_normal=ny_nz": { "model": "technological_singularity:earth_slope_px_py.obj", "y":270, "x":180 }
+    }
+}

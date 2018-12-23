@@ -1,0 +1,7 @@
+{
+	"forge_marker": 1,
+    "variants": {
+        "normal": { "model": "technological_singularity:equipment/core.obj" },
+        "inventory": { "model": "technological_singularity:equipment/core.obj" }
+    }
+}

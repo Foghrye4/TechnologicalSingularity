@@ -1,0 +1,103 @@
+buildscript {
+    repositories {
+        jcenter()
+	mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = 'SpongePowered'
+            url = 'http://repo.spongepowered.org/maven'
+	}
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'org.spongepowered:mixingradle:0.4-SNAPSHOT'
+    }
+}
+
+apply plugin: "net.minecraftforge.gradle.forge"
+apply plugin: "org.spongepowered.mixin"
+apply plugin: "java"
+//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+
+
+version = v
+group = "technological_singularity" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "technological_singularity"
+
+sourceCompatibility = targetCompatibility = "1.8" // Need this here so eclipse task generates correctly.
+compileJava {
+    sourceCompatibility = targetCompatibility = "1.8"
+}
+
+minecraft {
+    version = "1.12.2-14.23.0.2487"
+    runDir = "run"
+    mappings = "snapshot_20170822"
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'spongepowered-repo'
+        url = 'http://repo.spongepowered.org/maven/'
+    }
+    maven {
+        name = 'sonatype'
+        url = 'http://oss.sonatype.org/content/repositories/public/'
+    }
+}
+
+sourceSets {
+    main {
+        // Refmap declaration must match the refmap name specified in the json config
+        refMap = "technological_singularity.mixins.refmap.json"
+    }
+}
+
+jar {
+    exclude 'shadersmod/**'
+    manifest {
+    	attributes(
+		"TweakOrder": "1",
+		"ForceLoadAsMod": "true",
+    		"FMLCorePlugin": "technological_singularity.asm.TSCore",
+		"FMLCorePluginContainsFMLMod": "technological_singularity.TechnologicalSingularity"
+	)
+    }
+}
+
+dependencies {
+    compile "com.flowpowered:flow-noise:1.0.1-SNAPSHOT"
+    compile "com.typesafe:config:1.2.0"
+
+    deobfCompile("io.github.opencubicchunks:regionlib:0.44.0-SNAPSHOT")
+    deobfCompile("io.github.opencubicchunks:cubicchunks:1.12.2-0.0.835.0-SNAPSHOT")
+
+    deobfCompile("net.malisis:malisiscore:1.12.2-6.5.0-SNAPSHOT")
+
+    deobfCompile "org.spongepowered:mixin:0.7.7-SNAPSHOT"
+//    compile files('lib/mixin-0.7.6-SNAPSHOT.jar')
+//    compile files('lib/CubicChunks-1.12.2-0.0.819.0-runderchunk-dev.jar')
+}
+
+processResources {
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+                
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+        
+    // copy everything else except the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}

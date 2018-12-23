@@ -1,0 +1,15 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+ 		"model" : "cube_all"
+ 	},
+    "variants": {
+    	"variant": {
+        	"regular": { "textures": { "all": "technological_singularity:block/earth_structure"}},
+        	"black_tiles": { "textures": { "all": "technological_singularity:block/earth_structure_black_tiles"} },
+        	"hydroconcrete": { "textures": { "all": "technological_singularity:block/earth_hydroconcrete"} },
+    	    "asphalt": { "textures": { "all": "technological_singularity:block/earth_asphalt"} },
+	        "asphalt_striped": { "textures": { "all": "technological_singularity:block/yellow_black_stripes"} }
+        }
+    }
+}

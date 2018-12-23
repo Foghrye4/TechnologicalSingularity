@@ -1,0 +1,17 @@
+{
+    "blend": {
+        "func": "add",
+        "srcrgb": "one",
+        "dstrgb": "zero"
+    },
+    "vertex": "technological_singularity:earth_surface",
+    "fragment": "technological_singularity:earth_surface",
+    "attributes": [ ],
+    "samplers": [
+        { "name": "earth_night_texture" },
+        { "name": "earth_day_texture" }
+    ],
+    "uniforms": [
+       { "name": "directionToSun", "type": "float", "count": 3, "values": [ 0.0, 1.0, 0.0  ] }
+    ]
+}
