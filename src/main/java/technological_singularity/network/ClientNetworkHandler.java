@@ -14,6 +14,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.common.network.internal.FMLProxyPacket;
+import technological_singularity.TechnologicalSingularity;
 import technological_singularity.client.particle.ParticleTrail;
 import technological_singularity.player.ITSPlayer;
 import technological_singularity.ship.Ship;
@@ -36,8 +37,10 @@ public class ClientNetworkHandler extends ServerNetworkHandler {
 		PacketBuffer byteBufInputStream = new PacketBuffer(data);
 		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayerSP player = mc.player;
+		if (player == null)
+			return;
 		WorldClient world = mc.world;
-		ITSPlayer itsPlayer = (ITSPlayer) player;
+		ITSPlayer itsPlayer = player.getCapability(TechnologicalSingularity.TSPLAYER_CAPABILITY, null);
 		if (itsPlayer == null)
 			return;
 		switch (ClientCommands.values()[byteBufInputStream.readByte()]) {

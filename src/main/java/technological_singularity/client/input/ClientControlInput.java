@@ -20,6 +20,7 @@ import net.minecraftforge.fml.common.gameevent.InputEvent.MouseInputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import technological_singularity.TechnologicalSingularity;
 import technological_singularity.player.ITSPlayer;
 import technological_singularity.ship.Ship;
 import technological_singularity.ship.ThrusterGroup;
@@ -84,7 +85,7 @@ public class ClientControlInput {
 			return;
 		if (event.phase == Phase.START) 
 			return;
-		ITSPlayer tsPlayer = (ITSPlayer)player;
+		ITSPlayer tsPlayer = player.getCapability(TechnologicalSingularity.TSPLAYER_CAPABILITY, null);
 		Ship ship = tsPlayer.getShip();
 		Vec3d visibleVelocity = new Vec3d(player.motionX,player.motionY,player.motionZ);
 		Vec3d position = player.getPositionVector();
@@ -200,14 +201,17 @@ public class ClientControlInput {
         player.motionX += reaction[0]/ship.mass;
         player.motionY += reaction[1]/ship.mass;
         player.motionZ += reaction[2]/ship.mass;
-        System.out.println("reaction[3]"+reaction[3]);
         ship.vecUp = TSMathHelper.rotateVec4f(ship.vecUp, ship.vecLeft, reaction[3]/ship.mass);
         ship.vecForward = TSMathHelper.rotateVec4f(ship.vecForward, ship.vecLeft, reaction[3]/ship.mass);
         ship.vecLeft = TSMathHelper.rotateVec4f(ship.vecLeft, ship.vecUp, reaction[4]/ship.mass);
         ship.vecForward = TSMathHelper.rotateVec4f(ship.vecForward, ship.vecUp, reaction[4]/ship.mass);
         ship.vecUp = TSMathHelper.rotateVec4f(ship.vecUp, ship.vecForward, reaction[5]/ship.mass);
         ship.vecLeft = TSMathHelper.rotateVec4f(ship.vecLeft, ship.vecForward, reaction[5]/ship.mass);
-
+        System.out.println("reaction[3]="+reaction[3]);
+        System.out.println("reaction[4]="+reaction[4]);
+        System.out.println("reaction[5]="+reaction[5]);
+        
+        
 		mouseX = 0.0f;
 		mouseY = 0.0f;
         ship.tickClient();

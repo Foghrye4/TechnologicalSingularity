@@ -10,12 +10,6 @@ import java.io.InputStream;
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 
-import cubicchunks.world.ICubicWorld;
-import cubicchunks.world.NotCubicChunksWorldException;
-import cubicchunks.world.provider.ICubicWorldProvider;
-import cubicchunks.world.type.ICubicWorldType;
-import cubicchunks.worldgen.generator.ICubeGenerator;
-import cubicchunks.worldgen.generator.vanilla.VanillaCompatibilityGenerator;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -28,7 +22,7 @@ import static technological_singularity.TechnologicalSingularity.*;
 import technological_singularity.init.TSBiomes;
 import technological_singularity.world.biome.TSBiomeProvider;
 
-public class TechnologicalSingularityWorldProvider extends WorldProvider implements ICubicWorldProvider {
+public class TechnologicalSingularityWorldProvider extends WorldProvider {
 
 	// I consider The Ring position to be at 40 000 meters above a sea and at Y=0.
 	public static final int EARTH_ATMOSPHERE_BORDER = 4000;//Blocks, or 40 000 meters above a sea level
@@ -49,7 +43,7 @@ public class TechnologicalSingularityWorldProvider extends WorldProvider impleme
 		
 	@Override
 	protected void init() {
-		this.hasSkyLight = false;
+		this.hasSkyLight = true;
 		this.biomeProvider = new TSBiomeProvider();
 		TechnologicalSingularity.proxy.setSkyRenderer(this);
 		TechnologicalSingularity.proxy.setCloudRenderer(this);
@@ -166,7 +160,7 @@ public class TechnologicalSingularityWorldProvider extends WorldProvider impleme
 	public float getLatitude(double posX) {
 		return (float) (posX*180f/EARTH_EQUATRIAL_LENGTH);
 	}
-
+/*
     @Nullable @Override public ICubeGenerator createCubeGenerator() {
         if (!cubicWorld().isCubicWorld()) {
             throw new NotCubicChunksWorldException();
@@ -179,7 +173,7 @@ public class TechnologicalSingularityWorldProvider extends WorldProvider impleme
     
 	private ICubicWorld cubicWorld() {
         return (ICubicWorld) world;
-    }
+    }*/
 	
 	public int getOriginalActualHeight(){
 		return 0;

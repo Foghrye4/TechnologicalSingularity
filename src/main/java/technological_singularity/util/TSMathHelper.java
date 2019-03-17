@@ -214,4 +214,8 @@ public class TSMathHelper {
 				(float) vec.z * vec4f[0] - (float) vec.x * vec4f[2],
 				(float) vec.x * vec4f[1] - (float) vec.y * vec4f[0] };
 	}
+
+	public static float length(float[] vec) {
+		return (float) Math.sqrt(vec[0]*vec[0]+vec[1]*vec[1]+vec[2]*vec[2]);
+	}
 }

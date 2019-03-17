@@ -8,6 +8,7 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import technological_singularity.TechnologicalSingularity;
 import technological_singularity.player.ITSPlayer;
 import technological_singularity.ship.Ship;
 
@@ -16,7 +17,7 @@ public class ClientCameraEventHandler {
 	@SubscribeEvent
 	public void onCameraSetup(EntityViewRenderEvent.CameraSetup event) {
 		if (event.getEntity() instanceof EntityPlayerSP) {
-			ITSPlayer player = (ITSPlayer) event.getEntity();
+			ITSPlayer player = event.getEntity().getCapability(TechnologicalSingularity.TSPLAYER_CAPABILITY, null);
 			if (player.getShip() != null) {
 				Ship ship = player.getShip();
 				if (Minecraft.getMinecraft().gameSettings.thirdPersonView > 0)

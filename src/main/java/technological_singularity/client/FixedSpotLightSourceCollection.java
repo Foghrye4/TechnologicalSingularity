@@ -3,8 +3,9 @@ package technological_singularity.client;
 import java.util.Collection;
 import java.util.List;
 
-import cubicchunks.util.CubePos;
-import cubicchunks.util.XYZAddressable;
+import io.github.opencubicchunks.cubicchunks.api.util.CubePos;
+import io.github.opencubicchunks.cubicchunks.api.util.XYZAddressable;
+
 
 public class FixedSpotLightSourceCollection implements XYZAddressable {
 
@@ -13,7 +14,7 @@ public class FixedSpotLightSourceCollection implements XYZAddressable {
 	
 	public FixedSpotLightSourceCollection(CubePos posIn, Collection<LightSourceFixedSpotlight> lightSourcesIn){
 		pos = posIn;
-		lightSources = lightSourcesIn;
+		lightSources = lightSourcesIn; 
 	}
 	
 	@Override

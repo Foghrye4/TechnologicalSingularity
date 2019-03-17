@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.model.pipeline.ForgeBlockModelRenderer;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import technological_singularity.TechnologicalSingularity;
 import technological_singularity.player.ITSPlayer;
 import technological_singularity.ship.Equipment;
 import technological_singularity.ship.Ship;
@@ -20,7 +21,7 @@ public class PlayerRenderer {
 
 	@SubscribeEvent
 	public void onRenderPlayer(RenderPlayerEvent.Pre event) {
-		ITSPlayer player = (ITSPlayer) event.getEntityPlayer();
+		ITSPlayer player = event.getEntityPlayer().getCapability(TechnologicalSingularity.TSPLAYER_CAPABILITY, null);
 		if (player.getShip() == null)
 			return;
 		event.setCanceled(true);

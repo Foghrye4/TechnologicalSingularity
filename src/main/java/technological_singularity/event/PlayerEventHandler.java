@@ -1,19 +1,20 @@
 package technological_singularity.event;
 
-import java.nio.ByteBuffer;
-
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagByteArray;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent.*;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import technological_singularity.TechnologicalSingularity;
 import technological_singularity.network.ClientNetworkHandler;
 import technological_singularity.player.ITSPlayer;
-import technological_singularity.ship.Ship;
-import technological_singularity.util.TSStrings;
 import technological_singularity.world.TechnologicalSingularityWorldType;
 
 public class PlayerEventHandler {
@@ -31,39 +32,36 @@ public class PlayerEventHandler {
 	}
 
 	@SubscribeEvent
-	public void onPlayerLoading(LoadFromFile event) {
-		if (!(event.getEntity() instanceof EntityPlayerMP))
+	public void onPlayerAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
+		if(!(event.getObject() instanceof EntityPlayer))
 			return;
-		EntityPlayerMP player = (EntityPlayerMP) event.getEntity();
-		ITSPlayer tsPlayer = (ITSPlayer) player;
-		if (player.getEntityData().hasKey(TSStrings.NBT_SHIP)) {
-			Ship ship = Ship
-					.readFromByteBuffer(ByteBuffer.wrap(player.getEntityData().getByteArray(TSStrings.NBT_SHIP)));
-			tsPlayer.setShip(ship);
-		}
-	}
+		event.addCapability(ITSPlayer.CAPABILITY_KEY, new ICapabilitySerializable<NBTTagByteArray> (){
 
-	@SubscribeEvent
-	public void onPlayerSaving(SaveToFile event) {
-		if (!(event.getEntity() instanceof EntityPlayerMP))
-			return;
-		EntityPlayerMP player = (EntityPlayerMP) event.getEntity();
-		ITSPlayer tsPlayer = (ITSPlayer) player;
-		if (tsPlayer.getShip() != null) {
-			ByteBuffer byteBuffer = ByteBuffer.allocate(2048);
-			tsPlayer.getShip().writeToByteBuffer(byteBuffer);
-			byteBuffer.limit(byteBuffer.position());
-			player.getEntityData().setByteArray(TSStrings.NBT_SHIP, byteBuffer.array());
-		} else {
-			player.getEntityData().removeTag(TSStrings.NBT_SHIP);
-		}
-		if (player.getEntityData().hasKey(TSStrings.NBT_SHIP)) {
-			Ship ship = Ship
-					.readFromByteBuffer(ByteBuffer.wrap(player.getEntityData().getByteArray(TSStrings.NBT_SHIP)));
-			tsPlayer.setShip(ship);
-		}
-	}
+			ITSPlayer instance = TechnologicalSingularity.TSPLAYER_CAPABILITY.getDefaultInstance();
+			
+			@Override
+			public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+				return TechnologicalSingularity.TSPLAYER_CAPABILITY == capability;
+			}
 
+			@SuppressWarnings("unchecked")
+			@Override
+			public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+				return TechnologicalSingularity.TSPLAYER_CAPABILITY == capability? (T)instance :null;
+			}
+
+			@Override
+			public NBTTagByteArray serializeNBT() {
+				return (NBTTagByteArray) TechnologicalSingularity.TSPLAYER_CAPABILITY.getStorage().writeNBT(TechnologicalSingularity.TSPLAYER_CAPABILITY, instance, null);
+			}
+
+			@Override
+			public void deserializeNBT(NBTTagByteArray nbt) {
+				TechnologicalSingularity.TSPLAYER_CAPABILITY.getStorage().readNBT(TechnologicalSingularity.TSPLAYER_CAPABILITY, instance, null, nbt);
+			}
+		});
+	}
+	
 	@SubscribeEvent
 	public void onPlayerJoinWorldEvent(EntityJoinWorldEvent event) {
 		if (!(event.getWorld().getWorldType() instanceof TechnologicalSingularityWorldType))
@@ -75,7 +73,7 @@ public class PlayerEventHandler {
 		if (!(event.getEntity() instanceof EntityPlayerMP))
 			return;
 		EntityPlayerMP player = (EntityPlayerMP) event.getEntity();
-		ITSPlayer tsPlayer = (ITSPlayer) player;
+		ITSPlayer tsPlayer = event.getEntity().getCapability(TechnologicalSingularity.TSPLAYER_CAPABILITY,null);
 		if (tsPlayer.getShip() != null) {
 			TechnologicalSingularity.network.sendShipUpdateToPlayer(tsPlayer.getShip(), player);
 		}

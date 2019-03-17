@@ -43,7 +43,7 @@ public class ScheduledTaskAssembleShip implements Runnable {
 		Set<BlockPos> shipElements = new HashSet<BlockPos>();
 		MutableBlockPos downNorthWestCorner = new MutableBlockPos();
 		downNorthWestCorner.setPos(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
-		this.dropBlockPosToSet(world, pos, shipElements, downNorthWestCorner);
+		Ship.dropBlockPosToSet(world, pos, shipElements, downNorthWestCorner);
 		for(BlockPos pos1: shipElements){
 			IBlockState state = world.getBlockState(pos1);
 			ShipEquipmentBlock block = (ShipEquipmentBlock) state.getBlock();
@@ -51,28 +51,10 @@ public class ScheduledTaskAssembleShip implements Runnable {
 			equipmentList.add(equipment);
 		}
 		Ship ship = new Ship(equipmentList);
-		ITSPlayer tsPlayer = (ITSPlayer) player;
+		ITSPlayer tsPlayer = player.getCapability(TechnologicalSingularity.TSPLAYER_CAPABILITY, null);
 		tsPlayer.setShip(ship);
 		TechnologicalSingularity.network.sendShipUpdateToPlayer(ship, player);
 	}
 	
-	private void dropBlockPosToSet(World world, BlockPos currentPos, Set<BlockPos> shipElements, MutableBlockPos downNorthWestCorner){
-		if(shipElements.add(currentPos)){
-			int[] xyz = new int[] {0,0,1,0,0,-1,0,0};
-			for(int i=2;i<xyz.length;i++){
-				BlockPos newPos = currentPos.add(xyz[i-2], xyz[i-1], xyz[i]);
-				if(newPos.getX()<downNorthWestCorner.getX())
-					downNorthWestCorner.setPos(newPos.getX(),downNorthWestCorner.getY(),downNorthWestCorner.getZ());
-				if(newPos.getY()<downNorthWestCorner.getY())
-					downNorthWestCorner.setPos(downNorthWestCorner.getX(),newPos.getY(),downNorthWestCorner.getZ());
-				if(newPos.getZ()<downNorthWestCorner.getZ())
-					downNorthWestCorner.setPos(downNorthWestCorner.getX(),downNorthWestCorner.getY(),newPos.getZ());
-				IBlockState state = world.getBlockState(newPos);
-				if(state.getBlock() instanceof ShipEquipmentBlock){
-					this.dropBlockPosToSet(world, newPos, shipElements, downNorthWestCorner);
-				}
-			}
-		}
-	}
 
 }

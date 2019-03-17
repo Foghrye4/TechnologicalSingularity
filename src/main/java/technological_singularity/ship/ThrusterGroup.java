@@ -3,6 +3,7 @@ package technological_singularity.ship;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import technological_singularity.TechnologicalSingularity;
 import technological_singularity.network.ClientNetworkHandler;
@@ -46,17 +47,29 @@ public class ThrusterGroup {
 			reaction[0] -= dir[0] * t.traction * scale / ship.mass;
 			reaction[1] -= dir[1] * t.traction * scale / ship.mass;
 			reaction[2] -= dir[2] * t.traction * scale / ship.mass;
-			float[] comOffset = multiplyMatrix4fToVec3d(rotationMatrix,t.comOffset);
-			float[] pitch = crossProduct(t.direction,ship.vecLeft);
-			float[] yaw = crossProduct(t.direction,ship.vecUp);
-			float[] roll = crossProduct(t.direction,ship.vecForward);
-			multiplyMatrix4fToVec3f(rotationMatrix,pitch);
-			multiplyMatrix4fToVec3f(rotationMatrix,yaw);
-			multiplyMatrix4fToVec3f(rotationMatrix,roll);
-			reaction[3] += (float)(dotProduct(pitch,comOffset) * t.traction * scale);
-			reaction[4] += (float)(dotProduct(yaw,comOffset) * t.traction * scale);
-			reaction[5] += (float)(dotProduct(roll,comOffset) * t.traction * scale);
+			reaction[3] += getMoment(t, PITCH, scale);
+			reaction[4] += getMoment(t, YAW, scale);
+			reaction[5] += getMoment(t, ROLL, scale);
 		}
+	}
+	
+	private float getMoment(Thruster t, Vec3d forward, float scale) {
+		float fx = (float)forward.x;
+		float fy = (float)forward.y;
+		float fz = (float)forward.z;
+		
+		float cx = (float)t.comOffset.x;
+		float cy = (float)t.comOffset.y;
+		float cz = (float)t.comOffset.z;
+		
+		float dirx = (float)t.direction.x;
+		float diry = (float)t.direction.y;
+		float dirz = (float)t.direction.z;			
+		
+		float nx = fy*cz-fz*cy;
+		float ny = fz*cx-fx*cz;
+		float nz = fx*cy-fy*cx;
+		return t.traction * scale * (nx*dirx+ny*diry+nz*dirz);
 	}
 	
 	public void spawnTrailParticles(float[][] rotationMatrix, Vec3d comPos, Vec3d shipVelocity, float startAge){

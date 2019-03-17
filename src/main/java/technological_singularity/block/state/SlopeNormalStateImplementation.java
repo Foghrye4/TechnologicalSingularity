@@ -44,7 +44,7 @@ public class SlopeNormalStateImplementation extends StateImplementation implemen
 	}
 
 	@Override
-	public IBlockState withRotation(Axis a, Rotation rot) {
-		return this.withProperty(property, TSMathHelper.rotateVec3i(a, rot, value));
+	public IRotatable withRotation(Axis a, Rotation rot) {
+		return (IRotatable) this.withProperty(property, TSMathHelper.rotateVec3i(a, rot, value));
 	}
 }

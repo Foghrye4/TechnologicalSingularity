@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
+import io.github.opencubicchunks.cubicchunks.api.util.CubePos;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -182,9 +183,6 @@ public class TSCommands extends CommandBase {
 								this.writeCubeFile(filename, bf, sender);
 							}
 				}
-
-				
-				
 			} else if (args[0].equalsIgnoreCase("swapaxis")) {
 				for (TSCubePrimer primer : TSCubePrimer.INSTANCES) {
 					ByteBuffer bf = ByteBuffer.allocate(4096);
@@ -197,6 +195,8 @@ public class TSCommands extends CommandBase {
 					}
 					this.writeCubeFile(primer.fileName, bf, sender);
 				}
+			} else if (args[0].equalsIgnoreCase("saveship")) {
+				EntityPlayerMP player = (EntityPlayerMP)sender;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

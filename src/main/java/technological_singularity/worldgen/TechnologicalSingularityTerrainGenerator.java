@@ -7,30 +7,24 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
 
-import cubicchunks.api.worldgen.biome.CubicBiome;
-import cubicchunks.api.worldgen.populator.CubePopulatorEvent;
-import cubicchunks.util.Box;
-import cubicchunks.util.Coords;
-import cubicchunks.util.CubePos;
-import cubicchunks.world.column.IColumn;
-import cubicchunks.world.cube.Cube;
-import cubicchunks.worldgen.generator.CubeGeneratorsRegistry;
-import cubicchunks.worldgen.generator.CubePrimer;
-import cubicchunks.worldgen.generator.ICubeGenerator;
-import cubicchunks.worldgen.generator.ICubePrimer;
+import io.github.opencubicchunks.cubicchunks.api.util.Box;
+import io.github.opencubicchunks.cubicchunks.api.util.Coords;
+import io.github.opencubicchunks.cubicchunks.api.world.ICube;
+import io.github.opencubicchunks.cubicchunks.api.worldgen.CubeGeneratorsRegistry;
+import io.github.opencubicchunks.cubicchunks.api.worldgen.CubePrimer;
+import io.github.opencubicchunks.cubicchunks.api.worldgen.ICubeGenerator;
+import io.github.opencubicchunks.cubicchunks.api.worldgen.populator.CubePopulatorEvent;
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockPos.MutableBlockPos;
-import net.minecraft.world.EnumSkyBlock;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
-import net.minecraft.world.chunk.NibbleArray;
-import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.common.MinecraftForge;
 import technological_singularity.world.TechnologicalSingularityWorldProvider;
 
-public class TechnologicalSingularityTerrainGenerator implements ICubeGenerator {
+public class TechnologicalSingularityTerrainGenerator implements ICubeGenerator, IChunkGenerator {
 	
 	private final int CITY_SIZE_BIT = 3;
 	private final int CITY_GRID_SIZE = 1 << CITY_SIZE_BIT;
@@ -48,6 +42,7 @@ public class TechnologicalSingularityTerrainGenerator implements ICubeGenerator 
 
 	private final Random random = new Random();
 	private final List<SpawnListEntry> possibleCreatures = Lists.newArrayList();
+	private final TSChunkPrimer chunkPrimer = new TSChunkPrimer(this);
 	private final TSCubePrimer empty = new TSCubePrimer((byte) 0);
 	private final TSCubePrimer water = new TSCubePrimer((byte) 46);
 	private final TSCubePrimer solidStructure = new TSCubePrimer((byte) 18);
@@ -112,8 +107,10 @@ public class TechnologicalSingularityTerrainGenerator implements ICubeGenerator 
 	private final TSCubePrimer towerBridgeZ = new TSCubePrimer("tower_bridge_z.cube_structure");
 
 	@Nullable private final TechnologicalSingularityWorldProvider provider;
+	private World world;
 
-	public TechnologicalSingularityTerrainGenerator(WorldProvider worldProvider) {
+	public TechnologicalSingularityTerrainGenerator(WorldProvider worldProvider, World worldIn) {
+		world = worldIn;
 		if(worldProvider instanceof TechnologicalSingularityWorldProvider)
 			provider = (TechnologicalSingularityWorldProvider) worldProvider;
 		else
@@ -206,15 +203,6 @@ public class TechnologicalSingularityTerrainGenerator implements ICubeGenerator 
 		towerTop[1][2] = towerTop11;
 	}
 
-	@Override
-	public void generateColumn(IColumn arg0) {
-	}
-
-	@Override
-	public ICubePrimer generateCube(int cubeX, int cubeY, int cubeZ) {
-		return this.getCubePrimer(cubeX, cubeY, cubeZ);
-	}
-	
 	private boolean isEarth(int cubeX, int cubeY, int cubeZ){
 		int topBlock = this.provider.getGeneratorTopSolidBlockHeight(Coords.cubeToCenterBlock(cubeX), Coords.cubeToCenterBlock(cubeZ));
 		return Coords.cubeToMinBlock(cubeY) <= topBlock;
@@ -378,28 +366,72 @@ public class TechnologicalSingularityTerrainGenerator implements ICubeGenerator 
 		return possibleCreatures;
 	}
 
-	@Override
-	public void populate(Cube cube) {
-		if (!MinecraftForge.EVENT_BUS.post(new CubePopulatorEvent(cube.getCubicWorld(), cube))) {
-			CubeGeneratorsRegistry.generateWorld(cube.getCubicWorld(), new Random(cube.cubeRandomSeed()),
-					cube.getCoords(),
-					CubicBiome.getCubic(cube.getCubicWorld().getBiome(cube.getCoords().getCenterBlockPos())));
-		}
-	}
-
-	public Box getPopulationRequirement(Cube cube) {
-		return NO_POPULATOR_REQUIREMENT;
-	}
 
 	public BlockPos getClosestStructure(String name, BlockPos pos, boolean findUnexplored) {
 		return BlockPos.ORIGIN;
 	}
 
+
 	@Override
-	public void recreateStructures(Cube arg0) {
+	public void generateColumn(Chunk arg0) {
 	}
 
 	@Override
-	public void recreateStructures(IColumn arg0) {
+	public CubePrimer generateCube(int cubeX, int cubeY, int cubeZ) {
+		return this.getCubePrimer(cubeX, cubeY, cubeZ);
+	}
+
+	@Override
+	public Box getFullPopulationRequirements(ICube arg0) {
+		return null;
+	}
+
+	@Override
+	public Box getPopulationPregenerationRequirements(ICube arg0) {
+		return null;
+	}
+
+	@Override
+	@SuppressWarnings("deprecation")
+	public void populate(ICube cube) {
+		if (!MinecraftForge.EVENT_BUS.post(new CubePopulatorEvent(cube.getWorld(), cube))) {
+			CubeGeneratorsRegistry.generateWorld(cube.getWorld(), new Random(cube.hashCode()),
+					cube.getCoords(), cube.getBiome(cube.localAddressToBlockPos(0)));
+		}
+	}
+
+	@Override
+	public void recreateStructures(ICube arg0) {
+	}
+
+	@Override
+	public void recreateStructures(Chunk arg0) {
+	}
+
+	@Override
+	public Chunk generateChunk(int x, int z) {
+		return new Chunk(world, chunkPrimer, x, z);
+	}
+
+	@Override
+	public void populate(int x, int z) {}
+
+	@Override
+	public boolean generateStructures(Chunk chunkIn, int x, int z) {
+		return false;
+	}
+
+	@Override
+	public BlockPos getNearestStructurePos(World worldIn, String structureName, BlockPos position,
+			boolean findUnexplored) {
+		return BlockPos.ORIGIN;
+	}
+
+	@Override
+	public void recreateStructures(Chunk chunkIn, int x, int z) {}
+
+	@Override
+	public boolean isInsideStructure(World worldIn, String structureName, BlockPos pos) {
+		return false;
 	}
 }

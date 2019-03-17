@@ -11,6 +11,9 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.BiomeProperties;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -31,6 +34,10 @@ import technological_singularity.init.TSBlocks;
 import technological_singularity.init.TSEquipmentTypes;
 import technological_singularity.init.TSItems;
 import technological_singularity.network.ServerNetworkHandler;
+import technological_singularity.player.ITSPlayer;
+import technological_singularity.player.TSPlayerCapabilityImplementation;
+import technological_singularity.player.TSPlayerCapabilityStorage;
+import technological_singularity.ship.Ship;
 import technological_singularity.tileentity.ShipEquipmentTileEntity;
 import technological_singularity.world.TechnologicalSingularityWorldProvider;
 import technological_singularity.world.TechnologicalSingularityWorldType;
@@ -62,6 +69,9 @@ public class TechnologicalSingularity {
 
 	public static TechnologicalSingularityConfig config;
 	public static TechnologicalSingularity instance;
+	
+	@CapabilityInject(ITSPlayer.class)
+	public static final Capability<ITSPlayer> TSPLAYER_CAPABILITY = null;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) throws Exception {
@@ -86,6 +96,7 @@ public class TechnologicalSingularity {
 				TECHNOLOGICAL_SINGULARITY_DIMENSION_TYPE);
 		TECHNOLOGICAL_SINGULARITY_WORLD_TYPE = new TechnologicalSingularityWorldType("ts.worldType");
 		GameRegistry.registerTileEntity(ShipEquipmentTileEntity.class, MODID + ":equipment");
+		CapabilityManager.INSTANCE.register(ITSPlayer.class, new TSPlayerCapabilityStorage(), TSPlayerCapabilityImplementation.class);
 	}
 
 	@EventHandler

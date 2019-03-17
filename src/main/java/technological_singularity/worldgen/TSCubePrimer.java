@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import cubicchunks.worldgen.generator.ICubePrimer;
+import io.github.opencubicchunks.cubicchunks.api.worldgen.CubePrimer;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.Object2ByteMap;
@@ -22,7 +22,7 @@ import technological_singularity.block.BlockSpaceStationHull;
 import technological_singularity.init.TSBlocks;
 import static technological_singularity.TechnologicalSingularity.*;
 
-public class TSCubePrimer implements ICubePrimer {
+public class TSCubePrimer extends CubePrimer {
 
 	public static final IBlockState[] BLOCKSTATE_MAPPING = new IBlockState[256];
 	public static final boolean[] IS_LIGHT_SOURCE = new boolean[256];

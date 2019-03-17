@@ -63,24 +63,14 @@ jar {
     	attributes(
 		"TweakOrder": "1",
 		"ForceLoadAsMod": "true",
-    		"FMLCorePlugin": "technological_singularity.asm.TSCore",
+   		"FMLCorePlugin": "technological_singularity.asm.TSCore",
 		"FMLCorePluginContainsFMLMod": "technological_singularity.TechnologicalSingularity"
 	)
     }
 }
 
 dependencies {
-    compile "com.flowpowered:flow-noise:1.0.1-SNAPSHOT"
-    compile "com.typesafe:config:1.2.0"
-
-    deobfCompile("io.github.opencubicchunks:regionlib:0.44.0-SNAPSHOT")
-    deobfCompile("io.github.opencubicchunks:cubicchunks:1.12.2-0.0.835.0-SNAPSHOT")
-
-    deobfCompile("net.malisis:malisiscore:1.12.2-6.5.0-SNAPSHOT")
-
-    deobfCompile "org.spongepowered:mixin:0.7.7-SNAPSHOT"
-//    compile files('lib/mixin-0.7.6-SNAPSHOT.jar')
-//    compile files('lib/CubicChunks-1.12.2-0.0.819.0-runderchunk-dev.jar')
+    deobfCompile("io.github.opencubicchunks:cubicchunks-api:1.12.2-0.0-SNAPSHOT")
 }
 
 processResources {
